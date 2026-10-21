@@ -48,13 +48,8 @@ function AdminDashboardInner() {
     lastSynced,
   } = useUtsavContent();
 
-  // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passcode, setPasscode] = useState('');
-  const [authError, setAuthError] = useState('');
+  // Direct Access - No Passcode Required
   const [activeTab, setActiveTab] = useState('images'); // 'images', 'categories', 'gallery', 'testimonials', 'settings'
-
-  // Notification state
   const [statusMessage, setStatusMessage] = useState({ text: '', type: '' });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -79,12 +74,8 @@ function AdminDashboardInner() {
   const [customUrl, setCustomUrl] = useState('');
   const [customKey, setCustomKey] = useState('');
 
-  // Check existing session
+  // Initialize credentials
   useEffect(() => {
-    const sessionToken = localStorage.getItem('utsav_admin_session');
-    if (sessionToken === 'authenticated') {
-      setIsAuthenticated(true);
-    }
     const creds = getSupabaseCredentials();
     if (creds.url) setCustomUrl(creds.url);
     if (creds.anonKey) setCustomKey(creds.anonKey);
@@ -100,23 +91,6 @@ function AdminDashboardInner() {
   const showToast = (text, type = 'success') => {
     setStatusMessage({ text, type });
     setTimeout(() => setStatusMessage({ text: '', type: '' }), 4000);
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const targetPass = siteSettings?.admin_passcode || process.env.NEXT_PUBLIC_ADMIN_PASSCODE || 'utsav2026';
-    if (passcode.trim() === targetPass.trim()) {
-      setIsAuthenticated(true);
-      localStorage.setItem('utsav_admin_session', 'authenticated');
-      setAuthError('');
-    } else {
-      setAuthError('Incorrect passcode. Default is utsav2026 (or custom passcode).');
-    }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('utsav_admin_session');
   };
 
   // Upload helper for any image input
@@ -360,46 +334,7 @@ function AdminDashboardInner() {
   };
 
   // -------------------------------------------------------------
-  // RENDER: Passcode Login View
-  // -------------------------------------------------------------
-  if (!isAuthenticated) {
-    return (
-      <div className="admin-login-container">
-        <div className="admin-login-box">
-          <img src="/brand/logo-beige.webp" alt="The Utsav House" className="admin-login-logo" />
-          <h1>Admin Studio</h1>
-          <p>Please enter your passcode to access the website management console.</p>
-
-          {authError && <div className="admin-error-msg">{authError}</div>}
-
-          <form onSubmit={handleLogin}>
-            <div className="admin-input-group">
-              <label>Console Passcode</label>
-              <input
-                type="password"
-                className="admin-input"
-                placeholder="Enter passcode (default: utsav2026)"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                autoFocus
-                required
-              />
-            </div>
-            <button type="submit" className="admin-login-btn">
-              <Lock size={16} /> Enter Admin Console
-            </button>
-          </form>
-
-          <div style={{ marginTop: '24px', fontSize: '11px', color: 'var(--admin-muted)' }}>
-            Default Passcode: <code style={{ color: 'var(--admin-gold)' }}>utsav2026</code>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // -------------------------------------------------------------
-  // RENDER: Authenticated Dedicated Admin Console (NO PUBLIC HEADER/FOOTER)
+  // RENDER: Dedicated Admin Console (NO PASSCODE, NO PUBLIC HEADER/FOOTER)
   // -------------------------------------------------------------
   const currentCategoryImages = dynamicGallery[selectedCategorySlug] || [];
 
@@ -444,9 +379,9 @@ function AdminDashboardInner() {
           >
             <Eye size={14} /> View Live Website <ExternalLink size={12} />
           </a>
-          <button className="admin-btn admin-btn-danger" onClick={handleLogout}>
+          <Link href="/" className="admin-btn admin-btn-danger" title="Exit to website">
             <LogOut size={14} /> Exit
-          </button>
+          </Link>
         </div>
       </header>
 
