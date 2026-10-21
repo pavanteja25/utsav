@@ -3,6 +3,7 @@ node_modules/
 .next-dev/
 out/
 .env*
+!.env.local.example
 tmp/
 .DS_Store
 Thumbs.db
