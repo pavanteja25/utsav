@@ -93,11 +93,11 @@ header.landing-header{position:absolute;inset:0 0 auto;height:112px;padding:24px
 
 /* Quiet, image-led service collections. */
 .celebrations-heading{font-size:clamp(32px,3.2vw,46px);text-align:center;letter-spacing:-.035em;margin:0 0 48px}
-.celebration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px 28px}
+.celebration-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 20px}
 .celebration-link{display:block;min-width:0}
 .celebration-image{aspect-ratio:1/1.08;overflow:hidden;border-radius:4px;background:var(--cream)}
 .celebration-image img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.65,.3,1)}
-.celebration-link h3{font-size:25px;line-height:1.25;letter-spacing:-.02em;text-align:center;margin:17px 0 0;transition:color .25s}
+.celebration-link h3{font-size:23px;line-height:1.25;letter-spacing:-.02em;text-align:center;margin:17px 0 0;transition:color .25s}
 .celebration-link:hover img,.celebration-link:focus-visible img{transform:scale(1.045)}
 .celebration-link:hover h3{color:var(--rust)}
 .celebration-link:focus-visible{outline-offset:8px;border-radius:4px}
@@ -207,10 +207,29 @@ header.landing-header{position:fixed;inset:0 0 auto;height:96px;padding:14px 4.8
   .contact textarea{resize:vertical;min-height:96px}
   .contact form .button{width:100%;min-height:48px;white-space:normal;gap:12px}
   .contact small{font-size:11px;margin-top:14px}
-  footer{padding:35px 6% 25px;gap:28px 20px}
+  /* About page mobile alignment fixes */
+  .about-layout{grid-template-columns:1fr;gap:32px;margin:32px 0}
+  .about-layout>div>img,.about-layout img{height:360px;max-height:50vh;border-radius:120px 120px 0 0;width:100%;object-fit:cover}
+  .principles{grid-template-columns:1fr!important;gap:28px!important;margin-top:36px}
+  .principles article{border-top:1px solid var(--line);padding-top:20px;text-align:left}
+  .principles span{font-size:12px;letter-spacing:1px;color:var(--rust);font-weight:600}
+  .principles h3{margin:12px 0 8px;font-size:28px;line-height:1.2}
+  .principles p{font-size:14px;line-height:1.75}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:18px 12px;margin:36px 0;padding:24px 14px;border-radius:14px}
+  .stat-number{font-size:36px;line-height:1;margin-bottom:4px}
+  .stat-label{font-size:10px;letter-spacing:1px;line-height:1.4}
+
+  /* Footer mobile alignment */
+  footer{grid-template-columns:1fr 1fr;padding:40px 6% 25px;gap:28px 18px}
+  footer>div:first-child{grid-column:1/-1}
   footer .logo-crop{width:210px;height:85px;margin-bottom:12px}
-  footer a{font-size:13px;min-height:32px;display:flex;align-items:center;margin:5px 0;overflow-wrap:anywhere}
-  footer .eyebrow{letter-spacing:2px;margin-bottom:13px}
+  .footer-tagline{font-size:13px;line-height:1.7}
+  .footer-phones{margin:14px 0 16px;gap:8px}
+  .footer-phone-link{min-height:36px;font-size:13.5px}
+  .footer-social-logos{gap:12px;margin-top:14px}
+  .footer-logo-btn{width:44px;height:44px}
+  footer a{font-size:13px;min-height:32px;display:flex;align-items:center;margin:4px 0;overflow-wrap:anywhere}
+  footer .eyebrow{letter-spacing:2px;margin-bottom:12px}
   .footer-bottom{flex-direction:column;gap:8px;font-size:10px;line-height:1.6;padding-top:20px}
   .lightbox button{min-width:44px;min-height:44px;padding:9px}
   .lightbox figure{min-width:0}
@@ -218,6 +237,24 @@ header.landing-header{position:fixed;inset:0 0 auto;height:96px;padding:14px 4.8
   .lightbox .close{top:max(16px,env(safe-area-inset-top));right:12px}
   .gallery-back-btn,.gallery-motion-toggle{min-height:44px}
   #services{scroll-margin-top:calc(var(--mobile-header-height) + 16px)}
+}
+
+/* Footer phones & social logos base styling */
+.footer-tagline{margin:0 0 16px;line-height:1.7;color:#e8ded2;font-size:13px}
+.footer-phones{display:flex;flex-direction:column;gap:8px;margin:16px 0 18px}
+.footer-phone-link{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--cream);margin:0!important;transition:color .2s;text-decoration:none}
+.footer-phone-link:hover{color:#ceb88e}
+.footer-phone-link svg{color:#ceb88e;flex-shrink:0}
+.footer-social-logos{display:flex;align-items:center;gap:14px;margin-top:14px}
+.footer-logo-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(245,231,216,.28);background:rgba(255,255,255,.05);color:var(--cream);margin:0!important;transition:all .25s ease;text-decoration:none}
+.footer-logo-btn:hover{background:var(--cream);color:var(--green);border-color:var(--cream);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.25)}
+
+@media(max-width:480px){
+  footer{grid-template-columns:1fr;gap:28px}
+  .celebration-grid{grid-template-columns:1fr;gap:24px;max-width:320px;margin-inline:auto}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:14px 10px;padding:20px 12px}
+  .stat-number{font-size:32px}
+  .stat-label{font-size:9.5px}
 }
 @media(max-width:360px){
   .hero-banner .hero-copy{padding-top:32px;padding-bottom:88px}
@@ -227,4 +264,5 @@ header.landing-header{position:fixed;inset:0 0 auto;height:96px;padding:14px 4.8
   .celebration-link h3{font-size:20px}
   .contact form{padding:23px 16px}
 }
+
 
