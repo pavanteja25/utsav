@@ -48,7 +48,10 @@ function AdminDashboardInner() {
     lastSynced,
   } = useUtsavContent();
 
-  // Direct Access - No Passcode Required
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passcode, setPasscode] = useState('');
+  const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('images'); // 'images', 'categories', 'gallery', 'testimonials', 'settings'
   const [statusMessage, setStatusMessage] = useState({ text: '', type: '' });
   const [isSaving, setIsSaving] = useState(false);
@@ -74,8 +77,12 @@ function AdminDashboardInner() {
   const [customUrl, setCustomUrl] = useState('');
   const [customKey, setCustomKey] = useState('');
 
-  // Initialize credentials
+  // Check existing session
   useEffect(() => {
+    const sessionToken = localStorage.getItem('utsav_admin_session');
+    if (sessionToken === 'authenticated') {
+      setIsAuthenticated(true);
+    }
     const creds = getSupabaseCredentials();
     if (creds.url) setCustomUrl(creds.url);
     if (creds.anonKey) setCustomKey(creds.anonKey);
@@ -91,6 +98,23 @@ function AdminDashboardInner() {
   const showToast = (text, type = 'success') => {
     setStatusMessage({ text, type });
     setTimeout(() => setStatusMessage({ text: '', type: '' }), 4000);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const targetPass = siteSettings?.admin_passcode || process.env.NEXT_PUBLIC_ADMIN_PASSCODE || 'utsav2026';
+    if (passcode.trim() === targetPass.trim()) {
+      setIsAuthenticated(true);
+      localStorage.setItem('utsav_admin_session', 'authenticated');
+      setAuthError('');
+    } else {
+      setAuthError('Incorrect passcode. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('utsav_admin_session');
   };
 
   // Upload helper for any image input
@@ -334,7 +358,48 @@ function AdminDashboardInner() {
   };
 
   // -------------------------------------------------------------
-  // RENDER: Dedicated Admin Console (NO PASSCODE, NO PUBLIC HEADER/FOOTER)
+  // RENDER: Passcode Login View (Passcode NOT exposed in UI)
+  // -------------------------------------------------------------
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-login-container">
+        <div className="admin-login-box">
+          <img src="/brand/logo-beige.webp" alt="The Utsav House" className="admin-login-logo" />
+          <h1>Admin Studio</h1>
+          <p>Please enter your passcode to access the website management console.</p>
+
+          {authError && <div className="admin-error-msg">{authError}</div>}
+
+          <form onSubmit={handleLogin}>
+            <div className="admin-input-group">
+              <label>Console Passcode</label>
+              <input
+                type="password"
+                className="admin-input"
+                placeholder="Enter passcode"
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                autoFocus
+                required
+              />
+            </div>
+            <button type="submit" className="admin-login-btn">
+              <Lock size={16} /> Enter Admin Console
+            </button>
+          </form>
+
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <Link href="/" style={{ color: 'var(--admin-muted)', fontSize: '12px', textDecoration: 'underline' }}>
+              &larr; Return to main website
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // RENDER: Authenticated Dedicated Admin Console (NO PUBLIC HEADER/FOOTER)
   // -------------------------------------------------------------
   const currentCategoryImages = dynamicGallery[selectedCategorySlug] || [];
 
@@ -379,9 +444,14 @@ function AdminDashboardInner() {
           >
             <Eye size={14} /> View Live Website <ExternalLink size={12} />
           </a>
-          <Link href="/" className="admin-btn admin-btn-danger" title="Exit to website">
-            <LogOut size={14} /> Exit
-          </Link>
+          <button
+            type="button"
+            className="admin-btn admin-btn-danger"
+            onClick={handleLogout}
+            title="Log out of admin studio"
+          >
+            <LogOut size={14} /> Log Out
+          </button>
         </div>
       </header>
 
@@ -1135,7 +1205,7 @@ function AdminDashboardInner() {
               </p>
               <div style={{ display: 'flex', gap: '12px', maxWidth: '400px' }}>
                 <input
-                  type="text"
+                  type="password"
                   className="admin-input"
                   value={settingsForm.admin_passcode || ''}
                   onChange={(e) =>
