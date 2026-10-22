@@ -7,7 +7,7 @@ function Link({ to, ...props }) { return <NextLink href={to} {...props} />; }
 function useLocation() { const raw = usePathname() || '/'; const pathname = raw.length > 1 && raw.endsWith('/') ? raw.slice(0, -1) : raw; return { pathname }; }
 function useParams() { const raw = usePathname() || '/'; const p = raw.split('/').filter(Boolean); return { category: p[1], subcategory: p[2] }; }
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, ArrowRight, ArrowDown, Menu, X, Flower2, Sparkles, Heart, Users, PartyPopper, Building2, Move, Pause, Play, ChevronLeft, ChevronRight, Instagram, Phone, Mail } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ArrowDown, Menu, X, Flower2, Sparkles, Heart, Users, PartyPopper, Building2, Move, Pause, Play, ChevronLeft, ChevronRight, Instagram, Phone, Mail, Star } from 'lucide-react';
 import images from './images.json';
 import SubcategoryCarousel from './CelebrationShowcase';
 import HomeIntro from './HomeIntro';
@@ -205,23 +205,176 @@ function Home() {
 
 function Testimonials() {
   const { testimonials } = useUtsavContent();
-  const activeReviews = testimonials.filter(t => t.is_visible !== false);
+  const activeReviews = (testimonials || []).filter(t => t.is_visible !== false);
+  const trackRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const resumeTimerRef = useRef(null);
+
+  // 4 duplicated sets for completely seamless infinite loop in both directions
+  const displayReviews = activeReviews.length > 0
+    ? [...activeReviews, ...activeReviews, ...activeReviews, ...activeReviews]
+    : [];
+
+  // Initialize scroll position in the middle (Set 2)
+  useEffect(() => {
+    const el = trackRef.current;
+    if (el && activeReviews.length > 0) {
+      const oneSetWidth = el.scrollWidth / 4;
+      if (oneSetWidth > 0 && el.scrollLeft === 0) {
+        el.scrollLeft = oneSetWidth;
+      }
+    }
+  }, [activeReviews.length]);
+
+  // Smooth continuous auto-scroll using requestAnimationFrame
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el || activeReviews.length === 0) return;
+
+    let animId;
+    const speed = 0.65; // pixels per frame
+
+    const step = () => {
+      if (!isPaused && el) {
+        el.scrollLeft += speed;
+        const oneSetWidth = el.scrollWidth / 4;
+        if (oneSetWidth > 0) {
+          if (el.scrollLeft >= oneSetWidth * 2.5) {
+            el.scrollLeft -= oneSetWidth;
+          } else if (el.scrollLeft <= oneSetWidth * 0.5) {
+            el.scrollLeft += oneSetWidth;
+          }
+        }
+      }
+      animId = requestAnimationFrame(step);
+    };
+
+    animId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animId);
+  }, [isPaused, activeReviews.length]);
+
+  const pauseTemporarily = (duration = 4500) => {
+    setIsPaused(true);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, duration);
+  };
+
+  const handleScroll = (direction) => {
+    pauseTemporarily(5000);
+    const el = trackRef.current;
+    if (!el) return;
+
+    const cardWidth = window.innerWidth <= 760 ? 310 : 410;
+    const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+    
+    el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+
+    // Handle seamless boundary wrap if near edges
+    setTimeout(() => {
+      if (!el) return;
+      const oneSetWidth = el.scrollWidth / 4;
+      if (oneSetWidth > 0) {
+        if (el.scrollLeft >= oneSetWidth * 2.8) {
+          el.scrollLeft -= oneSetWidth;
+        } else if (el.scrollLeft <= oneSetWidth * 0.4) {
+          el.scrollLeft += oneSetWidth;
+        }
+      }
+    }, 450);
+  };
+
+  if (activeReviews.length === 0) return null;
+
   return (
-    <section className="testimonials section">
+    <section className="testimonials section" style={{ position: 'relative' }}>
       <Title eyebrow="KIND WORDS">Love, in their words</Title>
-      <div className="marquee" tabIndex="0" aria-label="Client testimonials. Focus or hover to pause.">
-        <div className="marquee-track">
-          {[0, 1].map(copy => (
-            <div className="quote-set" key={copy} aria-hidden={copy === 1}>
-              {activeReviews.map((item, i) => (
-                <blockquote key={item.id || i}>
-                  <span>“</span>
-                  <p>{item.quote}</p>
-                  <cite>{item.client_name} · {item.event_type}</cite>
-                </blockquote>
-              ))}
-            </div>
+
+      <div
+        className="testimonials-carousel-wrapper"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={() => pauseTemporarily(5000)}
+      >
+        {/* Soft edge fade masks */}
+        <div className="testimonials-fade-left" aria-hidden="true" />
+        <div className="testimonials-fade-right" aria-hidden="true" />
+
+        {/* Floating Side Arrows for quick desktop clicking */}
+        <button
+          type="button"
+          className="testimonial-floating-arrow left"
+          onClick={() => handleScroll('left')}
+          aria-label="Previous testimonial"
+          title="Previous testimonial"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <button
+          type="button"
+          className="testimonial-floating-arrow right"
+          onClick={() => handleScroll('right')}
+          aria-label="Next testimonial"
+          title="Next testimonial"
+        >
+          <ChevronRight size={22} />
+        </button>
+
+        {/* Scrollable Track */}
+        <div
+          className="testimonials-scroll-track"
+          ref={trackRef}
+          tabIndex="0"
+          aria-label="Client testimonials carousel. Use left and right arrows or swipe to navigate."
+        >
+          {displayReviews.map((item, i) => (
+            <blockquote key={`${item.id || i}-${i}`} className="testimonial-card">
+              <span className="testimonial-quote-mark" aria-hidden="true">“</span>
+              <p>{item.quote}</p>
+              <div className="testimonial-author-row">
+                <cite>{item.client_name} · {item.event_type}</cite>
+                <div className="testimonial-stars" aria-label={`${item.rating || 5} stars`}>
+                  {[...Array(item.rating || 5)].map((_, s) => (
+                    <Star key={s} size={13} fill="#9d5942" color="#9d5942" />
+                  ))}
+                </div>
+              </div>
+            </blockquote>
           ))}
+        </div>
+
+        {/* Manual Navigation Controls (Arrows + Auto-scroll Toggle) */}
+        <div className="testimonials-bottom-controls">
+          <button
+            type="button"
+            className="testimonial-nav-btn prev"
+            onClick={() => handleScroll('left')}
+            aria-label="Previous testimonial"
+            title="Scroll Left"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          <button
+            type="button"
+            className={`testimonial-nav-btn play-pause ${isPaused ? 'paused' : 'playing'}`}
+            onClick={() => setIsPaused(!isPaused)}
+            aria-label={isPaused ? 'Resume auto scroll' : 'Pause auto scroll'}
+            title={isPaused ? 'Resume Auto-Scroll' : 'Pause Auto-Scroll'}
+          >
+            {isPaused ? <Play size={14} style={{ marginLeft: '2px' }} /> : <Pause size={14} />}
+          </button>
+
+          <button
+            type="button"
+            className="testimonial-nav-btn next"
+            onClick={() => handleScroll('right')}
+            aria-label="Next testimonial"
+            title="Scroll Right"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
       </div>
     </section>
