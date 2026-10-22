@@ -128,9 +128,9 @@ function Home() {
         loading="eager"
       />
       <div className="hero-copy">
-        <p className="eyebrow">{siteSettings?.hero_eyebrow || 'EVENT PLANNING & DESIGN · INDIA'}</p>
-        <h1 id="hero-title" style={{ whiteSpace: 'pre-line' }}>{siteSettings?.hero_title || 'Moments\nthat stay\nforever.'}</h1>
-        <p className="hero-description" style={{ whiteSpace: 'pre-line' }}>{siteSettings?.hero_description || 'Thoughtfully planned. Beautifully designed.\nWe turn your special moments into unforgettable memories.'}</p>
+        <p className="eyebrow" suppressHydrationWarning>{siteSettings?.hero_eyebrow || 'EVENT PLANNING & DESIGN · INDIA'}</p>
+        <h1 id="hero-title" suppressHydrationWarning style={{ whiteSpace: 'pre-line' }}>{siteSettings?.hero_title || 'Moments that stay forever.'}</h1>
+        <p className="hero-description" suppressHydrationWarning style={{ whiteSpace: 'pre-line' }}>{siteSettings?.hero_description || 'Thoughtfully planned. Beautifully designed. We turn your special moments into unforgettable memories.'}</p>
         <div className="actions">
           <Button light />
           <CallButton />
@@ -637,7 +637,7 @@ function Footer() {
       <div>
         <Logo />
         <p className="footer-tagline">Thoughtfully planned. Beautifully designed.<br />Handcrafting memories, here in India.</p>
-        <div className="footer-contact-links" aria-label="Contact channels & social handles">
+        <div className="footer-contact-links" suppressHydrationWarning aria-label="Contact channels & social handles">
           {phonePrimary && (
             <a href={`tel:${phonePrimary.replace(/\s+/g, '')}`} className="footer-contact-item" aria-label={`Call ${phonePrimary}`}>
               <span className="footer-icon-badge"><Phone size={14} aria-hidden="true" /></span>
