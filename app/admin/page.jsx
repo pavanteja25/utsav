@@ -416,13 +416,13 @@ function AdminDashboardInner() {
       <header className="admin-header">
         <div className="admin-brand">
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-            <div style={{ width: '150px', height: '52px', position: 'relative' }}>
+            <div className="admin-brand-logo-wrap">
               <span className="logo-crop">
                 <img src="/brand/logo-beige.webp" alt="The Utsav House" />
               </span>
             </div>
           </Link>
-          <h2>The Utsav House</h2>
+          <h2 className="admin-brand-title">The Utsav House</h2>
           <span className="admin-badge">Admin Studio</span>
           {isSupabaseConfigured() ? (
             <span className="status-pill online">
@@ -444,7 +444,9 @@ function AdminDashboardInner() {
             }}
             title="Revalidate cache"
           >
-            <RefreshCw size={14} /> Refresh Cache
+            <RefreshCw size={13} />
+            <span className="admin-btn-label-desktop">Refresh Cache</span>
+            <span className="admin-btn-label-mobile">Refresh</span>
           </button>
           <a
             href="/"
@@ -453,7 +455,10 @@ function AdminDashboardInner() {
             className="admin-btn admin-btn-secondary"
             title="Open website in new tab"
           >
-            <Eye size={14} /> View Live Website <ExternalLink size={12} />
+            <Eye size={13} />
+            <span className="admin-btn-label-desktop">View Live Website</span>
+            <span className="admin-btn-label-mobile">Live Site</span>
+            <ExternalLink size={11} className="admin-btn-label-desktop" />
           </a>
           <button
             type="button"
@@ -461,7 +466,9 @@ function AdminDashboardInner() {
             onClick={handleLogout}
             title="Log out of admin studio"
           >
-            <LogOut size={14} /> Log Out
+            <LogOut size={13} />
+            <span className="admin-btn-label-desktop">Log Out</span>
+            <span className="admin-btn-label-mobile">Logout</span>
           </button>
         </div>
       </header>
@@ -556,7 +563,7 @@ function AdminDashboardInner() {
                 <div className="admin-form-col-full">
                   <div className="admin-input-group">
                     <label>Main Hero Banner Image</label>
-                    <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                    <div className="admin-input-upload-row">
                       <input
                         type="text"
                         className="admin-input"
@@ -845,11 +852,10 @@ function AdminDashboardInner() {
                   Browse all 400+ celebration photos or filter by specific category. Upload new photos to any category.
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <div className="admin-gallery-search-wrap">
                 <input
                   type="text"
-                  className="admin-input"
-                  style={{ width: '220px' }}
+                  className="admin-input admin-gallery-search-input"
                   placeholder="Search photos..."
                   value={gallerySearch}
                   onChange={(e) => setGallerySearch(e.target.value)}
@@ -1036,74 +1042,76 @@ function AdminDashboardInner() {
               </button>
             </div>
 
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Client Name</th>
-                  <th>Event Type</th>
-                  <th>Review Quote</th>
-                  <th>Rating</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {testimonials.map((t) => (
-                  <tr key={t.id}>
-                    <td style={{ fontWeight: 600 }}>{t.client_name}</td>
-                    <td>
-                      <span
-                        style={{
-                          background: 'rgba(203,179,135,0.15)',
-                          color: 'var(--admin-gold)',
-                          padding: '2px 8px',
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                        }}
-                      >
-                        {t.event_type}
-                      </span>
-                    </td>
-                    <td style={{ maxWidth: '380px', color: 'var(--admin-muted)' }}>
-                      &ldquo;{t.quote}&rdquo;
-                    </td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '2px', color: 'var(--admin-gold)' }}>
-                        {[...Array(t.rating || 5)].map((_, i) => (
-                          <Star key={i} size={13} fill="currentColor" />
-                        ))}
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`status-pill ${t.is_visible !== false ? 'online' : 'offline'}`}>
-                        {t.is_visible !== false ? 'Visible' : 'Hidden'}
-                      </span>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div style={{ display: 'inline-flex', gap: '6px' }}>
-                        <button
-                          className="admin-btn admin-btn-secondary"
-                          style={{ padding: '6px 10px' }}
-                          onClick={() => {
-                            setEditingTestimonial(t);
-                            setIsTestimonialModalOpen(true);
+            <div className="admin-table-responsive">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Client Name</th>
+                    <th>Event Type</th>
+                    <th>Review Quote</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th style={{ textAlign: 'right' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {testimonials.map((t) => (
+                    <tr key={t.id}>
+                      <td style={{ fontWeight: 600 }}>{t.client_name}</td>
+                      <td>
+                        <span
+                          style={{
+                            background: 'rgba(203,179,135,0.15)',
+                            color: 'var(--admin-gold)',
+                            padding: '2px 8px',
+                            borderRadius: '6px',
+                            fontSize: '11px',
                           }}
                         >
-                          <Edit3 size={13} />
-                        </button>
-                        <button
-                          className="admin-btn admin-btn-danger"
-                          style={{ padding: '6px 10px' }}
-                          onClick={() => handleDeleteTestimonial(t.id)}
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                          {t.event_type}
+                        </span>
+                      </td>
+                      <td style={{ maxWidth: '380px', color: 'var(--admin-muted)' }}>
+                        &ldquo;{t.quote}&rdquo;
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '2px', color: 'var(--admin-gold)' }}>
+                          {[...Array(t.rating || 5)].map((_, i) => (
+                            <Star key={i} size={13} fill="currentColor" />
+                          ))}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-pill ${t.is_visible !== false ? 'online' : 'offline'}`}>
+                          {t.is_visible !== false ? 'Visible' : 'Hidden'}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'inline-flex', gap: '6px' }}>
+                          <button
+                            className="admin-btn admin-btn-secondary"
+                            style={{ padding: '6px 10px' }}
+                            onClick={() => {
+                              setEditingTestimonial(t);
+                              setIsTestimonialModalOpen(true);
+                            }}
+                          >
+                            <Edit3 size={13} />
+                          </button>
+                          <button
+                            className="admin-btn admin-btn-danger"
+                            style={{ padding: '6px 10px' }}
+                            onClick={() => handleDeleteTestimonial(t.id)}
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -1175,7 +1183,7 @@ function AdminDashboardInner() {
               <p style={{ color: 'var(--admin-muted)', fontSize: '12px', marginBottom: '16px' }}>
                 Update the secret passcode used to access this admin panel.
               </p>
-              <div style={{ display: 'flex', gap: '12px', maxWidth: '400px' }}>
+              <div className="admin-passcode-row">
                 <input
                   type="password"
                   className="admin-input"
@@ -1308,7 +1316,7 @@ function AdminDashboardInner() {
 
               <div className="admin-input-group">
                 <label>Cover Image</label>
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                <div className="admin-input-upload-row">
                   <input
                     type="text"
                     className="admin-input"
@@ -1338,7 +1346,7 @@ function AdminDashboardInner() {
                 )}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
+              <div className="admin-modal-actions">
                 <button
                   type="button"
                   className="admin-btn admin-btn-secondary"
@@ -1429,7 +1437,7 @@ function AdminDashboardInner() {
                 </select>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
+              <div className="admin-modal-actions">
                 <button
                   type="button"
                   className="admin-btn admin-btn-secondary"
