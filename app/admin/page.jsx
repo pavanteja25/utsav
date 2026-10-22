@@ -413,7 +413,7 @@ function AdminDashboardInner() {
   return (
     <div className="admin-wrapper">
       {/* Dedicated Admin Header */}
-      <header className="admin-header">
+      <div className="admin-header">
         <div className="admin-brand">
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
             <div className="admin-brand-logo-wrap">
@@ -471,10 +471,10 @@ function AdminDashboardInner() {
             <span className="admin-btn-label-mobile">Logout</span>
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Navigation Tabs */}
-      <nav className="admin-nav-tabs">
+      <div className="admin-nav-tabs">
         <button
           className={`admin-tab-btn ${activeTab === 'images' ? 'active' : ''}`}
           onClick={() => setActiveTab('images')}
@@ -505,7 +505,7 @@ function AdminDashboardInner() {
         >
           <Database size={16} /> Supabase Setup & Passcode
         </button>
-      </nav>
+      </div>
 
       {/* Feedback Toast */}
       {statusMessage.text && (

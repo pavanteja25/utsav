@@ -187,10 +187,11 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 50;
   backdrop-filter: blur(12px);
+  height: auto !important;
+  min-height: auto !important;
 }
 
 .admin-brand {
@@ -280,6 +281,13 @@ img {
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  z-index: 40;
 }
 
 .admin-tab-btn {
@@ -780,9 +788,11 @@ img {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
-    position: sticky;
-    top: 0;
-    z-index: 60;
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    z-index: 50;
   }
 
   .admin-brand {
@@ -792,6 +802,7 @@ img {
     width: 100%;
     gap: 10px;
     flex-wrap: wrap;
+    height: auto !important;
   }
 
   .admin-brand-logo-wrap {
@@ -809,6 +820,7 @@ img {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     width: 100%;
+    height: auto !important;
   }
 
   .admin-header-actions .admin-btn {
@@ -830,6 +842,15 @@ img {
     scrollbar-width: none;
     -ms-overflow-style: none;
     flex-wrap: nowrap;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    display: flex !important;
+    box-shadow: none !important;
+    z-index: 40;
   }
 
   .admin-nav-tabs::-webkit-scrollbar {
