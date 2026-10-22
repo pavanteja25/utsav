@@ -555,15 +555,35 @@ function Contact() {
               <div className="contact-info-icon"><Heart size={20} /></div>
               <div className="contact-info-text">
                 <h4>Call & Direct Line</h4>
-                <p><a href="tel:+919676837722">+91 96768 37722</a> / <a href="tel:+919676847722">+91 96768 47722</a></p>
-                <p><a href="mailto:theutsavhouse@gmail.com">theutsavhouse@gmail.com</a></p>
+                <p>
+                  <a href={`tel:${(siteSettings?.phone_primary || '+91 96768 37722').replace(/\s+/g, '')}`}>
+                    {siteSettings?.phone_primary || '+91 96768 37722'}
+                  </a>
+                  {' / '}
+                  <a href={`tel:${(siteSettings?.phone_secondary || '+91 96768 47722').replace(/\s+/g, '')}`}>
+                    {siteSettings?.phone_secondary || '+91 96768 47722'}
+                  </a>
+                </p>
+                <p>
+                  <a href={`mailto:${siteSettings?.email_address || 'theutsavhouse@gmail.com'}`}>
+                    {siteSettings?.email_address || 'theutsavhouse@gmail.com'}
+                  </a>
+                </p>
               </div>
             </div>
             <div className="contact-info-item">
               <div className="contact-info-icon"><Instagram size={20} /></div>
               <div className="contact-info-text">
                 <h4>Follow our celebrations</h4>
-                <p><a href="https://www.instagram.com/the_utsavhouse/" target="_blank" rel="noopener noreferrer">@the_utsavhouse</a></p>
+                <p>
+                  <a
+                    href={siteSettings?.instagram_url || 'https://www.instagram.com/the_utsavhouse/'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {siteSettings?.instagram_handle || '@the_utsavhouse'}
+                  </a>
+                </p>
               </div>
             </div>
           </div>
@@ -604,30 +624,44 @@ function Contact() {
 }
 
 function Footer() {
-  const { categories } = useUtsavContent();
+  const { categories, siteSettings } = useUtsavContent();
   const topCategories = categories.filter(c => !c.parent_slug);
+  const instagramUrl = siteSettings?.instagram_url || 'https://www.instagram.com/the_utsavhouse/';
+  const instagramHandle = siteSettings?.instagram_handle || '@the_utsavhouse';
+  const emailAddress = siteSettings?.email_address || 'theutsavhouse@gmail.com';
+  const phonePrimary = siteSettings?.phone_primary || '+91 96768 37722';
+  const phoneSecondary = siteSettings?.phone_secondary || '+91 96768 47722';
+
   return (
     <footer>
       <div>
         <Logo />
         <p className="footer-tagline">Thoughtfully planned. Beautifully designed.<br />Handcrafting memories, here in India.</p>
-        <div className="footer-phones">
-          <a href="tel:+919676837722" className="footer-phone-link" aria-label="Call +91 96768 37722">
-            <Phone size={14} aria-hidden="true" />
-            <span>+91 96768 37722</span>
-          </a>
-          <a href="tel:+919676847722" className="footer-phone-link" aria-label="Call +91 96768 47722">
-            <Phone size={14} aria-hidden="true" />
-            <span>+91 96768 47722</span>
-          </a>
-        </div>
-        <div className="footer-social-logos" aria-label="Social & email links">
-          <a href="https://www.instagram.com/the_utsavhouse/" target="_blank" rel="noopener noreferrer" className="footer-logo-btn" aria-label="Instagram profile @the_utsavhouse" title="Instagram">
-            <Instagram size={19} aria-hidden="true" />
-          </a>
-          <a href="mailto:theutsavhouse@gmail.com" className="footer-logo-btn" aria-label="Email theutsavhouse@gmail.com" title="Email">
-            <Mail size={19} aria-hidden="true" />
-          </a>
+        <div className="footer-contact-links" aria-label="Contact channels & social handles">
+          {phonePrimary && (
+            <a href={`tel:${phonePrimary.replace(/\s+/g, '')}`} className="footer-contact-item" aria-label={`Call ${phonePrimary}`}>
+              <span className="footer-icon-badge"><Phone size={14} aria-hidden="true" /></span>
+              <span>{phonePrimary}</span>
+            </a>
+          )}
+          {phoneSecondary && (
+            <a href={`tel:${phoneSecondary.replace(/\s+/g, '')}`} className="footer-contact-item" aria-label={`Call ${phoneSecondary}`}>
+              <span className="footer-icon-badge"><Phone size={14} aria-hidden="true" /></span>
+              <span>{phoneSecondary}</span>
+            </a>
+          )}
+          {instagramHandle && (
+            <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="footer-contact-item" aria-label={`Instagram profile ${instagramHandle}`} title="Instagram">
+              <span className="footer-icon-badge"><Instagram size={14} aria-hidden="true" /></span>
+              <span>{instagramHandle}</span>
+            </a>
+          )}
+          {emailAddress && (
+            <a href={`mailto:${emailAddress}`} className="footer-contact-item" aria-label={`Email ${emailAddress}`} title="Email">
+              <span className="footer-icon-badge"><Mail size={14} aria-hidden="true" /></span>
+              <span>{emailAddress}</span>
+            </a>
+          )}
         </div>
       </div>
       <div>

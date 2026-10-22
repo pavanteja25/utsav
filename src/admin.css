@@ -45,10 +45,12 @@
   text-align: center;
 }
 
-.admin-login-logo {
-  height: 52px;
-  margin-bottom: 24px;
-  display: inline-block;
+.admin-logo-wrapper {
+  width: 220px;
+  height: 72px;
+  margin: 0 auto 18px;
+  display: block;
+  position: relative;
 }
 
 .admin-login-box h1 {

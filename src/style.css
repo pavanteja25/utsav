@@ -241,6 +241,11 @@ header.landing-header{position:fixed;inset:0 0 auto;height:96px;padding:14px 4.8
 
 /* Footer phones & social logos base styling */
 .footer-tagline{margin:0 0 16px;line-height:1.7;color:#e8ded2;font-size:13px}
+.footer-contact-links{display:flex;flex-direction:column;gap:10px;margin:18px 0 10px}
+.footer-contact-item{display:inline-flex;align-items:center;gap:12px;font-size:13.5px;color:var(--cream);margin:0!important;text-decoration:none;transition:all .2s ease}
+.footer-contact-item:hover{color:#ceb88e;transform:translateX(3px)}
+.footer-icon-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid rgba(245,231,216,.28);background:rgba(255,255,255,.05);color:#ceb88e;flex-shrink:0;transition:all .2s ease}
+.footer-contact-item:hover .footer-icon-badge{background:var(--cream);color:var(--green);border-color:var(--cream)}
 .footer-phones{display:flex;flex-direction:column;gap:8px;margin:16px 0 18px}
 .footer-phone-link{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--cream);margin:0!important;transition:color .2s;text-decoration:none}
 .footer-phone-link:hover{color:#ceb88e}

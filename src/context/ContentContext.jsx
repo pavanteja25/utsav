@@ -24,6 +24,11 @@ const defaultSiteSettings = {
   story_image_2: '/images/event-101.jpg',
   about_image: '/images/event-109.jpg',
   contact_image: '/images/wedding-day-decor/wedding-day-decor-01.jpeg',
+  instagram_handle: '@the_utsavhouse',
+  instagram_url: 'https://www.instagram.com/the_utsavhouse/',
+  email_address: 'theutsavhouse@gmail.com',
+  phone_primary: '+91 96768 37722',
+  phone_secondary: '+91 96768 47722',
   admin_passcode: 'utsav2026',
   updated_at: '2026-01-01T00:00:00Z',
 };

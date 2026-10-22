@@ -74,6 +74,25 @@ export async function uploadImageToSupabase(file, folder = 'general') {
   return `${data.publicUrl}?t=${Date.now()}`;
 }
 
+function unpackSiteSettings(data) {
+  if (!data) return data;
+  let social = {};
+  if (data.hero_image_alt && data.hero_image_alt.startsWith('{')) {
+    try {
+      social = JSON.parse(data.hero_image_alt);
+    } catch (e) {}
+  }
+  return {
+    ...data,
+    hero_image_alt: social.alt || data.hero_image_alt,
+    instagram_handle: data.instagram_handle || social.instagram_handle || '@the_utsavhouse',
+    instagram_url: data.instagram_url || social.instagram_url || 'https://www.instagram.com/the_utsavhouse/',
+    email_address: data.email_address || social.email_address || 'theutsavhouse@gmail.com',
+    phone_primary: data.phone_primary || social.phone_primary || '+91 96768 37722',
+    phone_secondary: data.phone_secondary || social.phone_secondary || '+91 96768 47722',
+  };
+}
+
 // Data fetchers with error resilience
 export async function fetchSiteSettings() {
   const supabase = getSupabase();
@@ -83,20 +102,57 @@ export async function fetchSiteSettings() {
     console.warn('Could not fetch site settings from Supabase:', error.message);
     return null;
   }
-  return data;
+  return unpackSiteSettings(data);
 }
 
 export async function updateSiteSettings(settings) {
   const supabase = getSupabase();
   if (!supabase) throw new Error('Supabase not configured');
-  const payload = {
-    ...settings,
+  
+  const socialMeta = {
+    alt: settings.hero_image_alt || 'Ivory floral wedding mandap beside a lake in the warm evening light',
+    instagram_handle: settings.instagram_handle || '@the_utsavhouse',
+    instagram_url: settings.instagram_url || 'https://www.instagram.com/the_utsavhouse/',
+    email_address: settings.email_address || 'theutsavhouse@gmail.com',
+    phone_primary: settings.phone_primary || '+91 96768 37722',
+    phone_secondary: settings.phone_secondary || '+91 96768 47722',
+  };
+
+  const basePayload = {
     id: 'global_settings',
+    hero_image: settings.hero_image,
+    hero_eyebrow: settings.hero_eyebrow,
+    hero_title: settings.hero_title,
+    hero_description: settings.hero_description,
+    story_image_1: settings.story_image_1,
+    story_image_2: settings.story_image_2,
+    about_image: settings.about_image,
+    contact_image: settings.contact_image,
+    admin_passcode: settings.admin_passcode,
+    hero_image_alt: JSON.stringify(socialMeta),
     updated_at: new Date().toISOString(),
   };
-  const { data, error } = await supabase.from('site_settings').upsert(payload).select().single();
-  if (error) throw error;
-  return data;
+
+  // Try updating with dedicated columns first
+  let { data, error } = await supabase.from('site_settings').upsert({
+    ...basePayload,
+    instagram_handle: settings.instagram_handle || socialMeta.instagram_handle,
+    instagram_url: settings.instagram_url || socialMeta.instagram_url,
+    email_address: settings.email_address || socialMeta.email_address,
+    phone_primary: settings.phone_primary || socialMeta.phone_primary,
+    phone_secondary: settings.phone_secondary || socialMeta.phone_secondary,
+  }).select().single();
+
+  if (error && (error.code === 'PGRST204' || error.message?.includes('column'))) {
+    // Columns don't exist yet in Supabase table schema cache, fallback to base payload with packed socialMeta
+    const fallbackRes = await supabase.from('site_settings').upsert(basePayload).select().single();
+    if (fallbackRes.error) throw fallbackRes.error;
+    data = fallbackRes.data;
+  } else if (error) {
+    throw error;
+  }
+
+  return unpackSiteSettings(data);
 }
 
 export async function fetchCategories() {

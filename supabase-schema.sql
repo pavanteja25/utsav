@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     story_image_2 TEXT DEFAULT '/images/event-101.jpg',
     about_image TEXT DEFAULT '/images/event-109.jpg',
     contact_image TEXT DEFAULT '/images/wedding-day-decor/wedding-day-decor-01.jpeg',
+    instagram_handle TEXT DEFAULT '@the_utsavhouse',
+    instagram_url TEXT DEFAULT 'https://www.instagram.com/the_utsavhouse/',
+    email_address TEXT DEFAULT 'theutsavhouse@gmail.com',
+    phone_primary TEXT DEFAULT '+91 96768 37722',
+    phone_secondary TEXT DEFAULT '+91 96768 47722',
     admin_passcode TEXT DEFAULT 'utsav2026',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

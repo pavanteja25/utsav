@@ -35,6 +35,9 @@ import {
   Sparkles,
   Eye,
   Star,
+  Instagram,
+  Mail,
+  Phone,
 } from 'lucide-react';
 
 function AdminDashboardInner() {
@@ -364,7 +367,11 @@ function AdminDashboardInner() {
     return (
       <div className="admin-login-container">
         <div className="admin-login-box">
-          <img src="/brand/logo-beige.webp" alt="The Utsav House" className="admin-login-logo" />
+          <div className="admin-logo-wrapper">
+            <span className="logo-crop">
+              <img src="/brand/logo-beige.webp" alt="The Utsav House" />
+            </span>
+          </div>
           <h1>Admin Studio</h1>
           <p>Please enter your passcode to access the website management console.</p>
 
@@ -408,8 +415,12 @@ function AdminDashboardInner() {
       {/* Dedicated Admin Header */}
       <header className="admin-header">
         <div className="admin-brand">
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src="/brand/logo-beige.webp" alt="The Utsav House" style={{ height: '32px' }} />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+            <div style={{ width: '150px', height: '52px', position: 'relative' }}>
+              <span className="logo-crop">
+                <img src="/brand/logo-beige.webp" alt="The Utsav House" />
+              </span>
+            </div>
           </Link>
           <h2>The Utsav House</h2>
           <span className="admin-badge">Admin Studio</span>
@@ -461,7 +472,7 @@ function AdminDashboardInner() {
           className={`admin-tab-btn ${activeTab === 'images' ? 'active' : ''}`}
           onClick={() => setActiveTab('images')}
         >
-          <ImageIcon size={16} /> Website Images & Hero
+          <ImageIcon size={16} /> Hero Banner & Social Handles
         </button>
         <button
           className={`admin-tab-btn ${activeTab === 'categories' ? 'active' : ''}`}
@@ -611,128 +622,89 @@ function AdminDashboardInner() {
                   />
                 </div>
 
-                {/* Story Section Image 1 */}
-                <div className="admin-input-group">
-                  <label>Story Image (Left Arch)</label>
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={settingsForm.story_image_1 || ''}
-                      onChange={(e) =>
-                        setSettingsForm({ ...settingsForm, story_image_1: e.target.value })
-                      }
-                    />
-                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer' }}>
-                      <Upload size={14} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) =>
-                          handleFileUpload(e.target.files[0], 'story', (url) =>
-                            setSettingsForm({ ...settingsForm, story_image_1: url })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                  <div className="image-preview-card" style={{ height: '180px' }}>
-                    <img src={settingsForm.story_image_1} alt="Story 1" />
-                  </div>
+                {/* Social Media & Contact IDs Section */}
+                <div className="admin-form-col-full" style={{ borderTop: '1px solid var(--admin-border)', paddingTop: '24px', marginTop: '12px' }}>
+                  <h4 style={{ color: 'var(--admin-gold)', fontSize: '15px', margin: '0 0 6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Instagram size={17} /> Social Media Handles & Contact Information
+                  </h4>
+                  <p style={{ color: 'var(--admin-muted)', fontSize: '12px', margin: '0 0 16px' }}>
+                    These handles and numbers are dynamically showcased next to their respective icons in the website footer and contact sections.
+                  </p>
                 </div>
 
-                {/* Story Section Image 2 */}
                 <div className="admin-input-group">
-                  <label>Story Image (Right Detail)</label>
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={settingsForm.story_image_2 || ''}
-                      onChange={(e) =>
-                        setSettingsForm({ ...settingsForm, story_image_2: e.target.value })
-                      }
-                    />
-                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer' }}>
-                      <Upload size={14} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) =>
-                          handleFileUpload(e.target.files[0], 'story', (url) =>
-                            setSettingsForm({ ...settingsForm, story_image_2: url })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                  <div className="image-preview-card" style={{ height: '180px' }}>
-                    <img src={settingsForm.story_image_2} alt="Story 2" />
-                  </div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Instagram size={14} color="#ceb88e" /> Instagram Handle / Display Name
+                  </label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settingsForm.instagram_handle || ''}
+                    onChange={(e) =>
+                      setSettingsForm({ ...settingsForm, instagram_handle: e.target.value })
+                    }
+                    placeholder="@the_utsavhouse"
+                  />
                 </div>
 
-                {/* About Page Image */}
                 <div className="admin-input-group">
-                  <label>About Page Arch Image</label>
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={settingsForm.about_image || ''}
-                      onChange={(e) =>
-                        setSettingsForm({ ...settingsForm, about_image: e.target.value })
-                      }
-                    />
-                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer' }}>
-                      <Upload size={14} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) =>
-                          handleFileUpload(e.target.files[0], 'about', (url) =>
-                            setSettingsForm({ ...settingsForm, about_image: url })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                  <div className="image-preview-card" style={{ height: '180px' }}>
-                    <img src={settingsForm.about_image} alt="About" />
-                  </div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <ExternalLink size={14} color="#ceb88e" /> Instagram Profile URL
+                  </label>
+                  <input
+                    type="url"
+                    className="admin-input"
+                    value={settingsForm.instagram_url || ''}
+                    onChange={(e) =>
+                      setSettingsForm({ ...settingsForm, instagram_url: e.target.value })
+                    }
+                    placeholder="https://www.instagram.com/the_utsavhouse/"
+                  />
                 </div>
 
-                {/* Contact Page Image */}
                 <div className="admin-input-group">
-                  <label>Contact Page Image</label>
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={settingsForm.contact_image || ''}
-                      onChange={(e) =>
-                        setSettingsForm({ ...settingsForm, contact_image: e.target.value })
-                      }
-                    />
-                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer' }}>
-                      <Upload size={14} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) =>
-                          handleFileUpload(e.target.files[0], 'contact', (url) =>
-                            setSettingsForm({ ...settingsForm, contact_image: url })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                  <div className="image-preview-card" style={{ height: '180px' }}>
-                    <img src={settingsForm.contact_image} alt="Contact" />
-                  </div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Mail size={14} color="#ceb88e" /> Official Email Address
+                  </label>
+                  <input
+                    type="email"
+                    className="admin-input"
+                    value={settingsForm.email_address || ''}
+                    onChange={(e) =>
+                      setSettingsForm({ ...settingsForm, email_address: e.target.value })
+                    }
+                    placeholder="theutsavhouse@gmail.com"
+                  />
+                </div>
+
+                <div className="admin-input-group">
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Phone size={14} color="#ceb88e" /> Primary Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    className="admin-input"
+                    value={settingsForm.phone_primary || ''}
+                    onChange={(e) =>
+                      setSettingsForm({ ...settingsForm, phone_primary: e.target.value })
+                    }
+                    placeholder="+91 96768 37722"
+                  />
+                </div>
+
+                <div className="admin-input-group">
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Phone size={14} color="#ceb88e" /> Secondary Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    className="admin-input"
+                    value={settingsForm.phone_secondary || ''}
+                    onChange={(e) =>
+                      setSettingsForm({ ...settingsForm, phone_secondary: e.target.value })
+                    }
+                    placeholder="+91 96768 47722"
+                  />
                 </div>
               </div>
             </div>
