@@ -150,8 +150,8 @@ function Home() {
     <section className="story section">
       <Reveal direction="left" className="story-images-wrap">
         <div className="story-images">
-          <Photo item={{ src: siteSettings?.story_image_1 || '/images/event-100.jpg', alt: 'Story inspiration left' }} />
-          <Photo item={{ src: siteSettings?.story_image_2 || '/images/event-101.jpg', alt: 'Story inspiration right' }} />
+          <Photo item={{ src: siteSettings?.story_image_1 && siteSettings.story_image_1 !== '/images/event-100.jpg' ? siteSettings.story_image_1 : '/images/wedding-day-decor/wedding-day-decor-08.jpeg', alt: 'Golden wedding mandap with pink and white flower garlands' }} />
+          <Photo item={{ src: siteSettings?.story_image_2 && siteSettings.story_image_2 !== '/images/event-101.jpg' ? siteSettings.story_image_2 : '/images/wedding-day-decor/wedding-day-decor-03.jpeg', alt: 'Garden entrance arch with hanging pink and white flowers' }} />
           <span className="small-seal">MADE WITH<br />♡<br />MEANING</span>
         </div>
       </Reveal>
